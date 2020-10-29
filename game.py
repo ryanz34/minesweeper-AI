@@ -1,5 +1,5 @@
 from random import choice
-
+from copy import deepcopy
 
 class MinesweeperGame:
 
@@ -83,6 +83,18 @@ class MinesweeperGame:
     def create_game(self):
         self.generate_bombs()
         self.compute_neighbours()
+
+    def get_board(self):
+        board = deepcopy(self.game_board)
+
+        for y in range(self.ydim):
+            for x in range(self.xdim):
+                if self.marked_board[y][x]:
+                    board[y][x] = -2
+                elif self.hidden_board[y][x]:
+                    board[y][x] = -1
+
+        return board
 
 
 xdim = int(input("X-dimension: "))
