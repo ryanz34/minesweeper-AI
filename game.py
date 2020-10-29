@@ -30,13 +30,34 @@ def compute_neighbours(game_board):
 
 
 def reveal(game_board, masked_board, hidden_board, x, y):
-    if hidden_board[y][x]:
-        hidden_board[y][x] = False
+    visit = {(x, y)}
+    to_visit = [(x, y)]
+    direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+    while len(to_visit) != 0:
+        position = to_visit.pop(0)
+
+        hidden_board[position[1]][position[0]] = False
+
+        if game_board[position[1]][position[0]] == 0:
+            for d in direction:
+                if 0 <= position[0]+d[0] < len(game_board[0]) and 0 <= position[1]+d[1] < len(game_board):
+                    p = (position[0]+d[0], position[1]+d[1])
+
+                    if p not in visit:
+                        to_visit.append(p)
+                        visit.add(p)
 
     if game_board[y][x] == 9:
         return True
-    else:
-        return False
+
+
+def win(game_board, hidden_board):
+    for y in range(len(game_board)):
+        for x in range(len(game_board[0])):
+            if game_board[y][x] != 9 and hidden_board[y][x]:
+                return False
+    return True
 
 
 xdim = int(input("X-dimension: "))
@@ -74,4 +95,5 @@ while True:
         print("lose")
         break
 
-
+    if win(board, hboard):
+        print("win")
